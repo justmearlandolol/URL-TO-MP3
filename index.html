@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT to MP3 Downloader</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f9; }
+        .container { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; width: 400px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        button:disabled { background: #ccc; }
+        #message { margin-top: 20px; font-weight: bold; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>YouTube to MP3</h2>
+    <input type="text" id="urlInput" placeholder="Paste YouTube URL here...">
+    <button id="downloadBtn">Download MP3</button>
+    <div id="message"></div>
+</div>
+
+<script>
+    const btn = document.getElementById('downloadBtn');
+    const input = document.getElementById('urlInput');
+    const msg = document.getElementById('message');
+
+    btn.onclick = async () => {
+        const url = input.value;
+        if(!url) return alert("Masukkan URL!");
+
+        btn.disabled = true;
+        msg.innerText = "Downloading... Please wait...";
+        msg.className = "";
+
+        try {
+            const response = await fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+            const result = await response.json();
+
+            if(result.status === 'success') {
+                msg.innerText = result.message;
+                msg.className = "success";
+            } else {
+                msg.innerText = "Error: " + result.message;
+                msg.className = "error";
+            }
+        } catch (err) {
+            msg.innerText = "Server error occurred.";
+            msg.className = "error";
+        } finally {
+            btn.disabled = false;
+        }
+    };
+</script>
+
+</body>
+</html>
+
