@@ -1,17 +1,3 @@
-#!/usr/bin/env python3
-"""
-YouTube -> MP3 / MP4 downloader.
-
-Backend: Flask + yt-dlp. Progress is REAL, not faked:
-  * download phase  -> yt-dlp progress hooks (bytes downloaded / total bytes)
-  * convert phase   -> ffmpeg `-progress pipe:1`, percent derived from
-                       out_time_us vs the media duration known up-front
-Both phases are streamed to the browser over SSE (Server-Sent Events).
-
-Run:  python app.py            (then open http://localhost:5000)
-Env:  PORT, YTDL_DOWNLOAD_DIR, YTDL_KEEP_MINUTES
-"""
-
 from __future__ import annotations
 
 import atexit
